@@ -47,7 +47,9 @@ PRECISIONS = single double complex complex16
 #
 ############################################################################
 
-all: lib exe example
+all: $(SCALAPACKLIB)
+
+include SRC/Makefile
 
 SCALAPACKLIBS=toolslib pblaslib redistlib scalapacklib
 
@@ -68,7 +70,9 @@ redistlib:
 	( cd REDIST/SRC; $(MAKE) integer $(PRECISIONS) )
 
 scalapacklib:
-	( cd SRC; $(MAKE) $(PRECISIONS) )
+	$(MAKE) -C SRC $(PRECISIONS)
+	#$(ARCH) $(ARCHFLAGS) ../$(SCALAPACKLIB) SRC/*.o
+	#$(RANLIB) ../$(SCALAPACKLIB)
 
 toolslib:
 	( cd TOOLS; $(MAKE) $(PRECISIONS) )

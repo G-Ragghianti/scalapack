@@ -14,7 +14,7 @@
 #
 ############################################################################
 
-include ../SLmake.inc
+#include ../SLmake.inc
 
 #######################################################################
 #  This is the makefile to create a library for ScaLAPACK.
@@ -190,40 +190,30 @@ ZLASRC = \
    zdbtf2.o  zdbtrf.o  zdttrf.o zdttrsv.o  zpttrsv.o zsteqr2.o ztrmvt.o \
    zlamsh.o  zlaref.o  zlanv2.o zlahqr2.o pzheevr.o
 
-all: single complex double complex16
+$(SCALAPACKLIB): $(PRECISIONS)
+	$(ARCH) $(ARCHFLAGS) $(SCALAPACKLIB) $(OBJS)
+	$(RANLIB) $(SCALAPACKLIB)
 
-single: $(SLASRC) $(SCLAUX) $(ALLAUX)
-	$(ARCH) $(ARCHFLAGS) ../$(SCALAPACKLIB) $(SLASRC) $(SCLAUX) \
-	$(ALLAUX)
-	$(RANLIB) ../$(SCALAPACKLIB)
+.PHONY: $(PRECISIONS)
+single: $(SLASRC) $(SCLAUX)
+complex: $(CLASRC) $(SCLAUX)
+double: $(DLASRC) $(DZLAUX)
+complex16: $(ZLASRC) $(DZLAUX)
+$(PRECISIONS): $(ALLAUX)
+	$(eval OBJS+=$^)
 
-complex: $(CLASRC) $(SCLAUX) $(ALLAUX)
-	$(ARCH) $(ARCHFLAGS) ../$(SCALAPACKLIB) $(CLASRC) $(SCLAUX) \
-	$(ALLAUX)
-	$(RANLIB) ../$(SCALAPACKLIB)
-
-double: $(DLASRC) $(DZLAUX) $(ALLAUX)
-	$(ARCH) $(ARCHFLAGS) ../$(SCALAPACKLIB) $(DLASRC) $(DZLAUX) \
-	$(ALLAUX)
-	$(RANLIB) ../$(SCALAPACKLIB)
-
-complex16: $(ZLASRC) $(DZLAUX) $(ALLAUX)
-	$(ARCH) $(ARCHFLAGS) ../$(SCALAPACKLIB) $(ZLASRC) $(DZLAUX) \
-	$(ALLAUX)
-	$(RANLIB) ../$(SCALAPACKLIB)
-
-slamov.o: slamov.c
-dlamov.o: dlamov.c
-clamov.o: clamov.c
-zlamov.o: zlamov.c
-slamov.o dlamov.o clamov.o zlamov.o: lamov.h
+slamov.o: SRC/slamov.c
+dlamov.o: SRC/dlamov.c
+clamov.o: SRC/clamov.c
+zlamov.o: SRC/zlamov.c
+SRC/slamov.o SRC/dlamov.o SRC/clamov.o SRC/zlamov.o: SRC/lamov.h
 	$(CC) -c $(CFLAGS) $(CDEFS) $(@:.o=.c) -o $@
 
 clean :
 	rm -f *.o
 
-.f.o : 
-	$(FC) -c $(FCFLAGS) $*.f
+%.o: SRC/%.c
+	$(CC) -c $(CDEFS) $(CCFLAGS) $<
 
-.c.o : 
-	$(CC) -c $(CDEFS) $(CCFLAGS) $*.c
+%.o: SRC/%.f
+	$(FC) -c $(FCFLAGS) $<
