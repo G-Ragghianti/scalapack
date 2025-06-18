@@ -1,6 +1,16 @@
 #include "Bdef.h"
 
 #if (INTFACE == C_CALL)
+void Cigebss(Int ConTxt, char *scope, char *top, Int m, Int n, Int *A, Int lda)
+#else
+F_VOID_FUNC igebss_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+		                     Int *A, Int *lda)
+#endif
+{
+	return igebs2d_(ConTxt, scope, top, m, n, A, lda);
+}
+
+#if (INTFACE == C_CALL)
 void Cigebs2d(Int ConTxt, char *scope, char *top, Int m, Int n, Int *A, Int lda)
 #else
 F_VOID_FUNC igebs2d_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,

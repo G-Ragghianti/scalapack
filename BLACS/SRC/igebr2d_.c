@@ -1,6 +1,17 @@
 #include "Bdef.h"
 
 #if (INTFACE == C_CALL)
+void Cigebrs(Int ConTxt, char *scope, char *top, Int m, Int n, Int *A,
+		              Int lda, Int rsrc, Int csrc)
+#else
+F_VOID_FUNC igebrs_(Int *ConTxt, F_CHAR scope, F_CHAR top, Int *m, Int *n,
+		                     Int *A, Int *lda, Int *rsrc, Int *csrc)
+#endif
+{
+	return igebr2d_(ConTxt, scope, top, m, n, A, lda, rsrc, csrc);
+}
+
+#if (INTFACE == C_CALL)
 void Cigebr2d(Int ConTxt, char *scope, char *top, Int m, Int n, Int *A,
               Int lda, Int rsrc, Int csrc)
 #else
