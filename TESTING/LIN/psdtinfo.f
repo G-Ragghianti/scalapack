@@ -319,7 +319,7 @@
          END IF
          I = I+1
 *        Send number of elements to be sent
-         CALL IGEBS2D( ICTXT, 'All', ' ', 1, 1, I-1, 1 )
+         CALL IGEBSS( ICTXT, 'All', ' ', 1, 1, I-1, 1 )
 *        Send elements
          CALL IGEBS2D( ICTXT, 'All', ' ', I-1, 1, WORK, I-1 )
 *
@@ -464,7 +464,7 @@
          EPS = PSLAMCH( ICTXT, 'eps' )
 *
          CALL SGEBR2D( ICTXT, 'All', ' ', 1, 1, THRESH, 1, 0, 0 )
-         CALL IGEBR2D( ICTXT, 'All', ' ', 1, 1, I, 1, 0, 0 )
+         CALL IGEBRS( ICTXT, 'All', ' ', 1, 1, I, 1, 0, 0 )
          CALL IGEBR2D( ICTXT, 'All', ' ', I, 1, WORK, I, 0, 0 )
          I = 1
          NMAT = WORK( I )
